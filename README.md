@@ -17,6 +17,13 @@ build:
 docker build -t nginx .
 
 run:
-docker run -p 8080:8080 nginx
+docker run -d -p 8080:8080 --name web nginx && docker exec -it web /bin/sh
+
+stop:
+docker stop web && docker rm web
+
+
+currently running:
+docker ps
 
 ssh -p 2222 vlopatin@localhost
