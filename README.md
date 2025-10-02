@@ -14,10 +14,9 @@ vboxhome
 cd inception/srcs/requirements/nginx
 
 build:
-docker build -t hello-world-image .
+docker build -t nginx .
 
 run:
-docker run --rm hello-world-image
-docker run -p 8080:8080 your-image-name
+docker run -p 8080:8080 nginx
 
 ssh -p 2222 vlopatin@localhost
