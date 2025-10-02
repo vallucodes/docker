@@ -9,4 +9,15 @@ https://github.com/vbachele/Inception BEST
 vallu
 vboxhome
 
+/media/sf_shared
+
+cd inception/srcs/requirements/nginx
+
+build:
+docker build -t hello-world-image .
+
+run:
+docker run --rm hello-world-image
+docker run -p 8080:8080 your-image-name
+
 ssh -p 2222 vlopatin@localhost
