@@ -17,7 +17,7 @@ build:
 docker build -t nginx .
 
 run:
-docker run -d -p 8080:8080 --name web nginx && docker exec -it web /bin/sh
+docker run -d -p 80:80 --name web nginx && docker exec -it web /bin/sh
 
 stop:
 docker stop web && docker rm web
