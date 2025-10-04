@@ -9,12 +9,33 @@ RUN apk add --no-cache \
 	php-curl \
 	php-fpm \
 	php-mysqli \
-	php-iconv
+	php-iconv \
+	php-mbstring \
+	php-xml \
+	php-zip \
+	php-gd \
+	php-opcache
+
+# Create directory
+RUN		mkdir -p /var/www/wordpress
+WORKDIR	/var/www/wordpress
+
+# Download WP-CLI
+# WORKDIR /tmp
+RUN curl -o wp-cli.phar https://raw.githubusercontent.com/wp-cli/builds/gh-pages/phar/wp-cli.phar \
+	&& chmod +x wp-cli.phar \
+	&& mv wp-cli.phar /usr/local/bin/wp
+
+# Set permissions for wordpress
+# RUN		chown -R www-data:www-data /var/www/html
 
 # Download wordpress
-WORKDIR /tmp
-RUN curl -o wordpress.tar.gz https://wordpress.org/latest.tar.gz \
-	&& tar -xzf wordpress.tar.gz \
-	&& mv wordpress/* /var/www/wordpress/ \
-	&& rm -rf wordpress wordpress.tar.gz
+RUN		wp core download --allow-root
 
+# Copy PHP-FPM pool config
+COPY	/conf/www.conf /etc/php7/php-fpm.d/www.conf
+
+# Expose php-fpm port
+EXPOSE	9000
+
+CMD ["php-fpm7", "-F"]
