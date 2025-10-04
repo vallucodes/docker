@@ -27,7 +27,7 @@ RUN curl -o wp-cli.phar https://raw.githubusercontent.com/wp-cli/builds/gh-pages
 	&& mv wp-cli.phar /usr/local/bin/wp
 
 # Set permissions for wordpress
-# RUN		chown -R www-data:www-data /var/www/html
+# RUN	chown -R www-data:www-data /var/www/html
 
 # Download wordpress
 RUN		wp core download --allow-root

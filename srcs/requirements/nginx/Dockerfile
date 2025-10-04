@@ -4,8 +4,8 @@ RUN apk update
 RUN apk add --no-cache bash curl nginx openssl
 
 # Create directory structure
-RUN mkdir -p /run/nginx && mkdir -p /var/www/wordpress
-RUN mkdir -p /etc/nginx/ssl
+# RUN mkdir -p /run/nginx
+RUN mkdir -p /etc/nginx/ssl /var/www/wordpress
 
 # Generate a certificate
 RUN openssl req -x509 -nodes -days 365 -newkey rsa:2048 \
