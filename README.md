@@ -30,14 +30,19 @@ docker-compose up --build -d
 stop:
 docker-compose down --volumes --remove-orphans
 
-
 currently running:
 docker ps -a
+
+debug container if it crashed:
+docker ps -a
+docker cp <container id>:/var/lib/mysql/<container id>.err .
+
+check for errors:
+docker logs <container name>
 
 ssh -p 2222 vlopatin@localhost
 
 curl -vk https://vlopatin.42.fr/
-
 
 VM:
 

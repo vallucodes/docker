@@ -1,5 +1,7 @@
 FROM alpine:3.14
 
+RUN apk update
+
 RUN apk add --no-cache curl bash
 
 RUN apk add --no-cache \
@@ -21,7 +23,6 @@ RUN		mkdir -p /var/www/wordpress
 WORKDIR	/var/www/wordpress
 
 # Download WP-CLI
-# WORKDIR /tmp
 RUN curl -o wp-cli.phar https://raw.githubusercontent.com/wp-cli/builds/gh-pages/phar/wp-cli.phar \
 	&& chmod +x wp-cli.phar \
 	&& mv wp-cli.phar /usr/local/bin/wp

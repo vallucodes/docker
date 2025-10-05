@@ -1,10 +1,11 @@
 FROM alpine:3.14
 
 RUN apk update
+
+# Download bash, curl, nginx, ssl
 RUN apk add --no-cache bash curl nginx openssl
 
 # Create directory structure
-# RUN mkdir -p /run/nginx
 RUN mkdir -p /etc/nginx/ssl /var/www/wordpress
 
 # Generate a certificate
@@ -15,10 +16,6 @@ RUN openssl req -x509 -nodes -days 365 -newkey rsa:2048 \
 
 # Copy webpage and server config to container
 COPY ./conf/nginx.conf /etc/nginx/http.d/default.conf
-# COPY ./conf/index.html /data/nginx
-
-# Set permissions for website
-# RUN chmod -R 755 /data/nginx
 
 EXPOSE 443
 

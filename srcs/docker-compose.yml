@@ -17,13 +17,38 @@ services:
   wordpress:
     build: ./requirements/wordpress
     container_name: wordpress
+    env_file: .env
+    secrets:
+      - db_password
     volumes:
       - wordpress_data:/var/www/wordpress
+    depends_on:
+      - mariadb
+    networks:
+      - inception
+
+  mariadb:
+    build: ./requirements/mariadb
+    container_name: mariadb
+    env_file: .env
+    secrets:
+      - db_root_password
+      - db_password
+    volumes:
+      - mariadb_data:/var/lib/mysql
     networks:
       - inception
 
 volumes:
+  mariadb_data:
   wordpress_data:
 
 networks:
   inception:
+    driver: bridge
+
+secrets:
+  db_password:
+    file: ../secrets/db_password.txt
+  db_root_password:
+    file: ../secrets/db_root_password.txt
