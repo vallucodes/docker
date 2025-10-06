@@ -17,6 +17,8 @@ RUN openssl req -x509 -nodes -days 365 -newkey rsa:2048 \
 # Copy webpage and server config to container
 COPY ./conf/nginx.conf /etc/nginx/http.d/default.conf
 
+# Expose Nginx port to outside world
 EXPOSE 443
 
+# Start Nginx. Daemon off to keep process in foreground.
 CMD ["nginx", "-g", "daemon off;"]

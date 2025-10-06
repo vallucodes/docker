@@ -49,3 +49,5 @@ VM:
 add host vlopatin.42.fr:
 sudo nano /etc/hosts
 127.0.0.1 vlopatin.42.fr
+
+curl -k -I -v --tlsv1 --tls-max 1.2 https://localhost

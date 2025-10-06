@@ -18,6 +18,8 @@ EXPOSE	3306
 # Configurate MariaDB
 ENTRYPOINT ["conf.sh"]
 
-# Start MariaDB
+# Start MariaDB in foreground (wrapper)
 CMD ["mysqld_safe"]
+
+# Start MariaDB. Foreground guaranteed by --console
 # CMD ["mariadbd", "--user=mysql", "--console"]

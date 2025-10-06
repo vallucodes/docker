@@ -34,6 +34,13 @@ if [ ! -d "$DATABASE_DIR/mysql" ]; then
 	echo "Initializing MariaDB database directory..."
 	mysql_install_db --user=mysql --ldata=$DATABASE_DIR --rpm > /dev/null
 
+	# Bootstrap to set settings. Bootstrapping is initialization mode.
+	#	1. Reload privilege tables in MariaDB
+	#	2. Set root password
+	#	3. Create database named $MYSQL_DATABASE
+	#	4. Create new database user and set pw. '%' allow user to connect from any host
+	#	5. Give new user full privileges. '@' is separator between username and host
+	#	6. Apply all privileges
 	echo "Bootstrap MariaDB..."
 	mariadbd --user=mysql --bootstrap --datadir="$DATABASE_DIR" <<EOF
 FLUSH PRIVILEGES;
