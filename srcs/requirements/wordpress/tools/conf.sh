@@ -13,7 +13,7 @@ require_env() {
 	fi
 }
 
-# Check if all environment variables are set
+# Required environment variables
 require_env WORDPRESS_DB_HOST
 require_env WORDPRESS_DB_USER
 require_env WORDPRESS_DB_PASSWORD_FILE
@@ -29,7 +29,7 @@ require_env URL
 
 DB_PASSWORD="$(tr -d '\r\n' < "$WORDPRESS_DB_PASSWORD_FILE")"
 WP_ADMIN_PASSWORD="$(tr -d '\r\n' < "$WORDPRESS_ADMIN_PASSWORD_FILE")"
-USR_PASSWORD=="$(tr -d '\r\n' < "$WORDPRESS_SECOND_PASSWORD_FILE")"
+USR_PASSWORD="$(tr -d '\r\n' < "$WORDPRESS_SECOND_PASSWORD_FILE")"
 
 
 if [ ! -f /var/www/wordpress/wp-config.php ]; then
@@ -60,7 +60,7 @@ if [ ! -f /var/www/wordpress/wp-config.php ]; then
 		--role=editor \
 		--user_pass="$USR_PASSWORD" \
 		--allow-root
-	echo "Wordpress installed and configured"
 fi
 
+# Execute command in the container (php-fpm83 -F)
 exec "$@"

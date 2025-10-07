@@ -42,8 +42,6 @@ docker logs <container name>
 
 ssh -p 2222 vlopatin@localhost
 
-curl -vk https://vlopatin.42.fr/
-
 VM:
 
 add host vlopatin.42.fr:
@@ -51,3 +49,25 @@ sudo nano /etc/hosts
 127.0.0.1 vlopatin.42.fr
 
 curl -k -I -v --tlsv1 --tls-max 1.2 https://localhost
+
+
+testing:
+
+curl -vk https://vlopatin.42.fr
+
+# 2>&1 redirects stderr (2) to stdout (1)
+curl -vk https://vlopatin.42.fr 2>&1 | grep TLSv
+
+curl -I http://vlopatin.42.fr
+curl -I https://vlopatin.42.fr
+
+openssl: the OpenSSL command=line tool for managing SSL/TLS operations
+s_client: a subcommand that acts like a client connecting to a TLS/SSL server. It’s used for testing and debugging SSL/TLS connections.
+-connect vlopatin.42.fr:443: specifies the host and port of the server you want to connect to.
+-tls1_1: tells OpenSSL to attempt only TLS 1.1 during the handshake.
+openssl s_client -connect vlopatin.42.fr:443 -tls1_1
+openssl s_client -connect vlopatin.42.fr:443 -tls1_2
+openssl s_client -connect vlopatin.42.fr:443 -tls1_3
+
+curl -v http://vlopatin.42.fr:80
+curl -v https://vlopatin.42.fr

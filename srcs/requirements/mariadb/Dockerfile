@@ -1,7 +1,6 @@
-FROM alpine:3.14
+FROM alpine:3.21
 
 # Install bash and MariaDB
-RUN 	apk update
 RUN 	apk add --no-cache bash mariadb mariadb-client
 
 # Create directories for MariaDB and give ownreship to the mysql user

@@ -1,6 +1,4 @@
-FROM alpine:3.14
-
-RUN apk update
+FROM alpine:3.21
 
 # Download bash, curl, nginx, ssl
 RUN apk add --no-cache bash curl nginx openssl

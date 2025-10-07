@@ -6,7 +6,7 @@ services:
     ports:
       - "443:443"
     volumes:
-      - wordpress_data:/var/www/wordpress
+      - wordpress_data:/var/www/wordpress:ro
     depends_on:
       - wordpress
     networks:
@@ -37,18 +37,28 @@ services:
       - db_password
     volumes:
       - mariadb_data:/var/lib/mysql
-    networks:
-      - inception
     healthcheck:
       test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
       interval: 5s
       timeout: 3s
       retries: 10
       start_period: 30s
+    networks:
+      - inception
 
 volumes:
   mariadb_data:
+    driver: local
+    driver_opts:
+      type: none
+      o: bind
+      device: /home/${USER}/data/mariadb
   wordpress_data:
+    driver: local
+    driver_opts:
+      type: none
+      o: bind
+      device: /home/${USER}/data/wordpress
 
 networks:
   inception:

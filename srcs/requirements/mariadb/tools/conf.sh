@@ -13,7 +13,7 @@ require_env() {
 	fi
 }
 
-# Check if all environment variables are set
+# Required environment variables
 require_env MYSQL_DATABASE
 require_env MYSQL_USER
 require_env MYSQL_ROOT_PASSWORD_FILE
@@ -61,4 +61,5 @@ sed -i 's|#bind-address=.*|bind-address=0.0.0.0|' /etc/my.cnf.d/mariadb-server.c
 # cat /etc/my.cnf.d/mariadb-server.cnf
 
 echo "Starting MariaDB..."
+# Execute command in the container (mysqld_safe)
 exec "$@"
