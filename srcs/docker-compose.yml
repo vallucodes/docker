@@ -3,6 +3,7 @@ services:
   nginx:
     build: ./requirements/nginx
     container_name: nginx
+    restart: unless-stopped
     ports:
       - "443:443"
     volumes:
@@ -15,6 +16,7 @@ services:
   wordpress:
     build: ./requirements/wordpress
     container_name: wordpress
+    restart: unless-stopped
     env_file: .env
     secrets:
       - db_password
@@ -31,6 +33,7 @@ services:
   mariadb:
     build: ./requirements/mariadb
     container_name: mariadb
+    restart: unless-stopped
     env_file: .env
     secrets:
       - db_root_password
@@ -39,10 +42,10 @@ services:
       - mariadb_data:/var/lib/mysql
     healthcheck:
       test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
-      interval: 5s
+      interval: 10s
       timeout: 3s
-      retries: 10
-      start_period: 30s
+      retries: 30
+      start_period: 100s
     networks:
       - inception
 

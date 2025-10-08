@@ -17,7 +17,7 @@ RUN apk add --no-cache \
 	php83-opcache
 
 # Configure PHP memory limit for CLI
-RUN echo "memory_limit = 512M" >> /etc/php83/php.ini
+RUN		echo "memory_limit = 512M" >> /etc/php83/php.ini
 
 # Create directory
 RUN		mkdir -p /var/www/wordpress
@@ -42,9 +42,8 @@ RUN		addgroup -S www-data || true \
 RUN		chown -R www-data:www-data /var/www/wordpress
 
 # Copy wordpress initialization config to
-# TODO change this to /usr/local/bin
-COPY tools/conf.sh /conf.sh
-RUN chmod +x /conf.sh
+COPY	tools/conf_wp.sh /usr/local/bin
+RUN		chmod +x /usr/local/bin/conf_wp.sh
 
 # Copy PHP-FPM pool config
 COPY	conf/www.conf /etc/php83/php-fpm.d/www.conf
@@ -53,8 +52,7 @@ COPY	conf/www.conf /etc/php83/php-fpm.d/www.conf
 EXPOSE	9000
 
 # Set configuration script as entrypoint for docker
-# TODO change this to ["conf.sh"]
-ENTRYPOINT ["/conf.sh"]
+ENTRYPOINT ["conf_wp.sh"]
 
 # Launch FastCGI Process Manager.
 # -F: keep as PID 1 in foreground

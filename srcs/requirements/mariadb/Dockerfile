@@ -8,14 +8,14 @@ RUN		mkdir -p /run/mariadb /var/lib/mysql /var/log/mysql && \
 		chown -R mysql:mysql /run/mariadb /var/lib/mysql /var/log/mysql
 
 # Copy config file to docker
-COPY	tools/conf.sh /usr/local/bin
-RUN		chmod +x /usr/local/bin/conf.sh
+COPY	tools/conf_mariadb.sh /usr/local/bin
+RUN		chmod +x /usr/local/bin/conf_mariadb.sh
 
 # Expose MariaDB port
 EXPOSE	3306
 
 # Configurate MariaDB
-ENTRYPOINT ["conf.sh"]
+ENTRYPOINT ["conf_mariadb.sh"]
 
 # Start MariaDB in foreground (wrapper)
 CMD ["mysqld_safe"]

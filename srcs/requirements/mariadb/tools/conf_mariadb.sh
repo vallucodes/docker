@@ -58,8 +58,6 @@ sed -i 's|^[[:space:]]*skip-networking[[:space:]]*$|#skip-networking|' /etc/my.c
 # Accept connections from any host
 sed -i 's|#bind-address=.*|bind-address=0.0.0.0|' /etc/my.cnf.d/mariadb-server.cnf
 
-# cat /etc/my.cnf.d/mariadb-server.cnf
-
 echo "Starting MariaDB..."
-# Execute command in the container (mysqld_safe)
+# Execute command in the container (mysqld_safe) as PID 1
 exec "$@"

@@ -43,7 +43,6 @@ docker logs <container name>
 ssh -p 2222 vlopatin@localhost
 
 VM:
-
 add host vlopatin.42.fr:
 sudo nano /etc/hosts
 127.0.0.1 vlopatin.42.fr
@@ -52,6 +51,13 @@ curl -k -I -v --tlsv1 --tls-max 1.2 https://localhost
 
 
 testing:
+
+docker stop $(docker ps -qa);
+docker rm $(docker ps -qa);
+docker rmi -f $(docker images -qa);
+docker volume rm $(docker volume ls -q);
+docker network rm $(docker images -qa);
+docker network rm $(docker network ls -q) 2>/dev/null;
 
 curl -vk https://vlopatin.42.fr
 
@@ -71,3 +77,16 @@ openssl s_client -connect vlopatin.42.fr:443 -tls1_3
 
 curl -v http://vlopatin.42.fr:80
 curl -v https://vlopatin.42.fr
+
+https://vlopatin.42.fr/wp-admin
+
+docker exec -it mariadb bash
+mariadb -u root -p
+
+SHOW DATABASES;
+USE inception
+SHOW TABLES;
+SELECT * FROM wp_users;
+USE mysql;
+EXIT;
+

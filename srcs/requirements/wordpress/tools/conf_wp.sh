@@ -31,7 +31,6 @@ DB_PASSWORD="$(tr -d '\r\n' < "$WORDPRESS_DB_PASSWORD_FILE")"
 WP_ADMIN_PASSWORD="$(tr -d '\r\n' < "$WORDPRESS_ADMIN_PASSWORD_FILE")"
 USR_PASSWORD="$(tr -d '\r\n' < "$WORDPRESS_SECOND_PASSWORD_FILE")"
 
-
 if [ ! -f /var/www/wordpress/wp-config.php ]; then
 	echo "Downloading wordpress..."
 	wp core download --path=/var/www/wordpress --allow-root
@@ -62,5 +61,5 @@ if [ ! -f /var/www/wordpress/wp-config.php ]; then
 		--allow-root
 fi
 
-# Execute command in the container (php-fpm83 -F)
+# Execute command in the container (php-fpm83 -F) as PID 1
 exec "$@"
