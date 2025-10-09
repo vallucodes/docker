@@ -4,6 +4,9 @@
 set -e
 
 # Check if environment variable is set
+# "$1": save env variable
+# "${!var_name}": expand to value or that variable
+# -z: string length zero
 require_env() {
 	var_name="$1"
 	var_value="${!var_name}"
@@ -32,7 +35,10 @@ RUN_DIR="/run/mariadb"
 # If database is not initialized
 if [ ! -d "$DATABASE_DIR/mysql" ]; then
 	echo "Initializing MariaDB database directory..."
-	mysql_install_db --user=mysql --ldata=$DATABASE_DIR --rpm > /dev/null
+	# --user=mysql: runs the initialization process as the mysql system user
+	# --basedir=: tells the script where MariaDB is installed
+	# --datadir=: specifies where to create the actual database files
+	mariadb-install-db --user=mysql --basedir=/usr --datadir="$DATABASE_DIR" >/dev/null
 
 	# Bootstrap to set settings. Bootstrapping is initialization mode.
 	#	1. Reload privilege tables in MariaDB
@@ -40,6 +46,7 @@ if [ ! -d "$DATABASE_DIR/mysql" ]; then
 	#	3. Create database named $MYSQL_DATABASE
 	#	4. Create new database user and set pw. '%' allow user to connect from any host
 	#	5. Give new user full privileges. '@' is separator between username and host
+	#	5. Delete all user accounts with no username. (This fixes access of wp_user to database)
 	#	6. Apply all privileges
 	echo "Bootstrap MariaDB..."
 	mariadbd --user=mysql --bootstrap --datadir="$DATABASE_DIR" <<EOF
@@ -48,6 +55,7 @@ ALTER USER 'root'@'localhost' IDENTIFIED BY '${MYSQL_ROOT_PASSWORD}';
 CREATE DATABASE IF NOT EXISTS ${MYSQL_DATABASE};
 CREATE USER IF NOT EXISTS '${MYSQL_USER}'@'%' IDENTIFIED BY '${MYSQL_PASSWORD}';
 GRANT ALL PRIVILEGES ON ${MYSQL_DATABASE}.* TO '${MYSQL_USER}'@'%';
+DELETE FROM mysql.user WHERE user='';
 FLUSH PRIVILEGES;
 EOF
 fi
@@ -59,5 +67,5 @@ sed -i 's|^[[:space:]]*skip-networking[[:space:]]*$|#skip-networking|' /etc/my.c
 sed -i 's|#bind-address=.*|bind-address=0.0.0.0|' /etc/my.cnf.d/mariadb-server.cnf
 
 echo "Starting MariaDB..."
-# Execute command in the container (mysqld_safe) as PID 1
+# Execute command in the container (mysqld_safe) as PID 1. "$@" = mysqld_safe.
 exec "$@"
