@@ -1,24 +1,57 @@
+# FROM alpine:3.21
+
+# # Install bash and MariaDB
+# RUN 	apk add --no-cache bash mariadb mariadb-client
+
+# # Create directories for MariaDB and give ownreship to the mysql user
+# RUN		mkdir -p /run/mysqld /run/mariadb /var/lib/mysql /var/log/mysql && \
+# 		chown -R mysql:mysql /run/mysqld /run/mariadb /var/lib/mysql /var/log/mysql
+
+# # Copy config file to docker
+# COPY	tools/conf_mariadb.sh /usr/local/bin
+# RUN		chmod +x /usr/local/bin/conf_mariadb.sh
+
+# # Expose MariaDB port
+# EXPOSE	3306
+
+# # Configurate MariaDB
+# ENTRYPOINT ["conf_mariadb.sh"]
+
+# # Start MariaDB in foreground (wrapper)
+# # CMD ["mysqld_safe"]
+
+# # Start MariaDB. Foreground guaranteed by --console
+# CMD ["mariadbd", "--user=mysql", "--console"]
+
+# Use Alpine Linux 3.21 as the base image for a lightweight container
 FROM alpine:3.21
 
-# Install bash and MariaDB
-RUN 	apk add --no-cache bash mariadb mariadb-client
+# Update package index and install MariaDB server, client, and required utilities
+# - mariadb: The main database server
+# - mariadb-client: Client tools for connecting to MariaDB
+# - bash: For scripting and running bash scripts
+# - util-linux: Provides the 'flock' command used in health checks
+# rm -rf /var/cache/apk/* is used to clean up the package cache to reduce image size
+RUN apk update && apk add --no-cache \
+    mariadb mariadb-client \
+    && rm -rf /var/cache/apk/*
 
-# Create directories for MariaDB and give ownreship to the mysql user
-RUN		mkdir -p /run/mysqld /run/mariadb /var/lib/mysql /var/log/mysql && \
-		chown -R mysql:mysql /run/mysqld /run/mariadb /var/lib/mysql /var/log/mysql
+# Create the MariaDB runtime directory and set proper ownership
+# /run/mariadbd is where MariaDB stores its socket file and PID file
+# /var/lib/mysql is the default data directory for MariaDB databases
+# Ensuring these directories exist and have the correct permissions is crucial for MariaDB to run properly
+RUN mkdir -p /run/mariadbd /var/lib/mysql /var/log/mysql && \
+    chown -R mysql:mysql /run/mariadbd /var/lib/mysql /var/log/mysql
 
-# Copy config file to docker
-COPY	tools/conf_mariadb.sh /usr/local/bin
-RUN		chmod +x /usr/local/bin/conf_mariadb.sh
+# Copy the database initialization script from the host to the container
+# This script will handle database setup, user creation, and initial configuration
+COPY tools/init.sh /init.sh
+# Make the initialization script executable
+RUN chmod +x /init.sh
 
-# Expose MariaDB port
-EXPOSE	3306
+# Expose the default MariaDB port
+EXPOSE 3306
 
-# Configurate MariaDB
-ENTRYPOINT ["conf_mariadb.sh"]
-
-# Start MariaDB in foreground (wrapper)
-# CMD ["mysqld_safe"]
-
-# Start MariaDB. Foreground guaranteed by --console
-CMD ["mariadbd", "--user=mysql", "--console"]
+# Set the initialization script as the container's entry point
+# This script will be executed when the container starts
+ENTRYPOINT ["/init.sh"]
