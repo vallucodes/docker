@@ -6,7 +6,7 @@ all: up
 up:
 	@mkdir -p /home/${USER}/data/mariadb
 	@mkdir -p /home/${USER}/data/wordpress
-# -d: run containers in the background
+# -d: run containers in the background (detached from terminal)
 	$(DOCKER_COMPOSE_FILE) up -d
 
 down:

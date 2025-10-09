@@ -75,13 +75,21 @@ openssl s_client -connect vlopatin.42.fr:443 -tls1_1
 openssl s_client -connect vlopatin.42.fr:443 -tls1_2
 openssl s_client -connect vlopatin.42.fr:443 -tls1_3
 
+
+# -v: verbose output with handshake
+# -k: bypass self-signed sertificate
+# -I: see ony headers
 curl -v http://vlopatin.42.fr:80
 curl -v https://vlopatin.42.fr
+
+curl -k https://vlopatin.42.fr:443
+curl -k http://vlopatin.42.fr:80
 
 https://vlopatin.42.fr/wp-admin
 
 docker exec -it mariadb bash
 mariadb -u root -p
+mariadb -h mariadb -u wp_user -p
 
 SHOW DATABASES;
 USE inception

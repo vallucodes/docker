@@ -31,6 +31,7 @@ DB_PASSWORD="$(tr -d '\r\n' < "$WORDPRESS_DB_PASSWORD_FILE")"
 WP_ADMIN_PASSWORD="$(tr -d '\r\n' < "$WORDPRESS_ADMIN_PASSWORD_FILE")"
 USR_PASSWORD="$(tr -d '\r\n' < "$WORDPRESS_SECOND_PASSWORD_FILE")"
 
+# -f: Check if path exists and is a regular file
 if [ ! -f /var/www/wordpress/wp-config.php ]; then
 	echo "Downloading wordpress..."
 	wp core download --path=/var/www/wordpress --allow-root

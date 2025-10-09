@@ -4,8 +4,8 @@ FROM alpine:3.21
 RUN 	apk add --no-cache bash mariadb mariadb-client
 
 # Create directories for MariaDB and give ownreship to the mysql user
-RUN		mkdir -p /run/mariadb /var/lib/mysql /var/log/mysql && \
-		chown -R mysql:mysql /run/mariadb /var/lib/mysql /var/log/mysql
+RUN		mkdir -p /run/mysqld /run/mariadb /var/lib/mysql /var/log/mysql && \
+		chown -R mysql:mysql /run/mysqld /run/mariadb /var/lib/mysql /var/log/mysql
 
 # Copy config file to docker
 COPY	tools/conf_mariadb.sh /usr/local/bin
@@ -18,7 +18,7 @@ EXPOSE	3306
 ENTRYPOINT ["conf_mariadb.sh"]
 
 # Start MariaDB in foreground (wrapper)
-CMD ["mysqld_safe"]
+# CMD ["mysqld_safe"]
 
 # Start MariaDB. Foreground guaranteed by --console
-# CMD ["mariadbd", "--user=mysql", "--console"]
+CMD ["mariadbd", "--user=mysql", "--console"]

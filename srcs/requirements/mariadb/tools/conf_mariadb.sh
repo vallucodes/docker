@@ -23,13 +23,13 @@ require_env MYSQL_PASSWORD_FILE
 MYSQL_ROOT_PASSWORD="$(tr -d '\r\n' < "$MYSQL_ROOT_PASSWORD_FILE")"
 MYSQL_PASSWORD="$(tr -d '\r\n' < "$MYSQL_PASSWORD_FILE")"
 
-# echo $MYSQL_ROOT_PASSWORD
-# echo $MYSQL_PASSWORD
+echo $MYSQL_ROOT_PASSWORD
+echo $MYSQL_PASSWORD
 
 DATABASE_DIR="/var/lib/mysql"
 RUN_DIR="/run/mariadb"
 
-# If database is not initialized
+# -d: Check if directory exists
 if [ ! -d "$DATABASE_DIR/mysql" ]; then
 	echo "Initializing MariaDB database directory..."
 	mysql_install_db --user=mysql --ldata=$DATABASE_DIR --rpm > /dev/null
@@ -43,6 +43,7 @@ if [ ! -d "$DATABASE_DIR/mysql" ]; then
 	#	6. Apply all privileges
 	echo "Bootstrap MariaDB..."
 	mariadbd --user=mysql --bootstrap --datadir="$DATABASE_DIR" <<EOF
+USE mysql;
 FLUSH PRIVILEGES;
 ALTER USER 'root'@'localhost' IDENTIFIED BY '${MYSQL_ROOT_PASSWORD}';
 CREATE DATABASE IF NOT EXISTS ${MYSQL_DATABASE};
